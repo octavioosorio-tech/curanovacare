@@ -1,1 +1,1 @@
-bienvenido a curanova care nostra plataforma medica 
+bienvenido a curanovacare nostra plataforma medica 
