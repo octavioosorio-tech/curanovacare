@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>CuraNovaCare - Nova</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="brand">CuraNovaCare</div>
+
+    <div class="topbar-right">
+      <!-- Selector de idioma -->
+      <div class="lang-wrapper">
+        <div class="select-lang" id="lang-selector">
+          <span id="lang-label">English</span>
+          <svg viewBox="0 0 20 20" fill="none">
+            <path d="M5 7l5 5 5-5" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div class="lang-menu" id="lang-menu"></div>
+      </div>
+
+      <div class="circle-badge">1</div>
+      <span class="user-name" id="topbar-username">NovaUser</span>
+
+      <button class="icon-btn" id="btn-open-profile" aria-label="Configuración">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path
+            d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z"
+            stroke="currentColor" stroke-width="1.4" />
+          <path
+            d="M19.4 14a1 1 0 00.2 1.1l.1.1a1 1 0 010 1.4l-1.1 1.1a1 1 0 01-1.4 0l-.1-.1a1 1 0 00-1.1-.2 1 1 0 00-.6.9V19a1 1 0 01-1 1h-1.6a1 1 0 01-1-1v-.2a1 1 0 00-.6-.9 1 1 0 00-1.1.2l-.1.1a1 1 0 01-1.4 0L4.3 16.6a1 1 0 010-1.4l.1-.1a1 1 0 00.2-1.1 1 1 0 00-.9-.6H3a1 1 0 01-1-1v-1.6a1 1 0 011-1h.2a1 1 0 00.9-.6 1 1 0 00-.2-1.1l-.1-.1a1 1 0 010-1.4L4.3 4.3a1 1 0 011.4 0l.1.1a1 1 0 001.1.2h.1a1 1 0 00.6-.9V3a1 1 0 011-1h1.6a1 1 0 011 1v.2a1 1 0 00.6.9h.1a1 1 0 001.1-.2l.1-.1a1 1 0 011.4 0l1.1 1.1a1 1 0 010 1.4l-.1.1a1 1 0 00-.2 1.1v.1a1 1 0 00.9.6H21a1 1 0 011 1v1.6a1 1 0 01-1 1h-.2a1 1 0 00-.9.6z"
+            stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <div class="main-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="card-title">
+          <div class="card-title-left">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="#6b7280" stroke-width="1.4" />
+              <path d="M12 7v5l3 2" stroke="#6b7280" stroke-width="1.4"
+                stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span>Tiempo</span>
+          </div>
+        </div>
+        <div class="timer-value" id="timer-display">00:00:00</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <div class="card-title-left">
+            <span>Recordatorios</span>
+          </div>
+          <button class="reminder-bell-btn" id="btn-open-reminder" aria-label="Nuevo recordatorio">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M15 17h5l-1.4-1.4A2 2 0 0118 14.2V11a6 6 0 10-12 0v3.2a2 2 0 01-.6 1.4L4 17h5"
+                stroke="#6b7280" stroke-width="1.4" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path d="M10 19a2 2 0 004 0" stroke="#6b7280" stroke-width="1.4"
+                stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+        <div class="reminders-list" id="reminders-list">
+          <div class="reminder-empty">Sin recordatorios aún.</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CHAT AREA -->
+    <section class="chat-area">
+      <div class="chat-scroll" id="chat-scroll">
+        <!-- Mensaje inicial por JS -->
+      </div>
+
+      <!-- INPUT -->
+      <div class="chat-input-bar">
+        <form class="chat-input-wrapper" id="chat-form">
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Habla con Nova"
+            aria-label="Escribe tu mensaje" />
+          <button class="send-btn" type="submit" aria-label="Enviar">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 4l16 8-16 8 4-8-4-8z" fill="currentColor" />
+            </svg>
+          </button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL PERFIL -->
+  <div class="modal-backdrop" id="modal-profile-backdrop">
+    <div class="modal">
+      <div class="modal-title">Perfil</div>
+      <div class="modal-body">
+        <div class="form-field">
+          <label class="form-label" for="profile-username">Nombre de usuario</label>
+          <input class="form-input" id="profile-username" type="text" value="NovaUser" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="profile-email">Correo electrónico</label>
+          <input class="form-input" id="profile-email" type="email"
+                 value="usuario@ejemplo.com" readonly />
+        </div>
+        <button class="btn btn-light btn-full" id="btn-open-about" type="button">
+          <span class="btn-icon-left">ℹ</span> <span>Acerca de</span>
+        </button>
+        <button class="btn btn-danger btn-full" type="button" id="btn-logout">
+          <span class="btn-icon-left">↪</span> <span>Cerrar sesión</span>
+        </button>
+        <button class="btn-text" type="button" id="btn-profile-cancel">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ACERCA DE -->
+  <div class="modal-backdrop" id="modal-about-backdrop">
+    <div class="modal">
+      <div class="modal-title">Acerca de CuraNovaCare</div>
+      <div class="modal-body">
+        <div class="about-text" id="about-text">
+          Tecnología utilizada para el desarrollo: IA generativa LLM.
+          Clasificación técnica: modelo de lenguaje autogenerativo (LLM).
+          Modelo específico: modelo de lenguaje grande de última generación.
+          Proveedor: plataforma de inteligencia artificial en la nube.
+
+          Esta app se desarrolló con ayuda de una inteligencia artificial,
+          que permitió generar código, traducir idiomas y estructurar
+          funcionalidades avanzadas como chatbots inteligentes, integración de
+          recordatorios y sugerencias generales de salud.
+
+          <br><br>
+          <span style="color:#dc2626;font-weight:600;">
+            Esta app no reemplaza atención médica profesional.
+          </span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light" type="button" id="btn-about-close">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL NUEVO RECORDATORIO -->
+  <div class="modal-backdrop" id="modal-reminder-backdrop">
+    <div class="modal">
+      <div class="modal-title">Nuevo recordatorio</div>
+      <div class="modal-body">
+        <div class="form-field">
+          <label class="form-label" for="reminder-title">Nombre del recordatorio</label>
+          <input class="form-input" id="reminder-title" type="text"
+                 placeholder="Ej: Tomar medicamento" />
+        </div>
+        <div class="form-row">
+          <div class="form-field" style="flex:1;">
+            <label class="form-label" for="reminder-date">Fecha</label>
+            <input class="form-input" id="reminder-date" type="date" />
+          </div>
+          <div class="form-field" style="flex:1;">
+            <label class="form-label" for="reminder-time">Hora</label>
+            <input class="form-input" id="reminder-time" type="time" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light" type="button" id="btn-reminder-cancel">
+          Cancelar
+        </button>
+        <button class="btn btn-primary" type="button" id="btn-reminder-save">
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
