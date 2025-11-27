@@ -1,4 +1,90 @@
+// ================== AUTENTICACIÓN BÁSICA (login / register) ==================
+document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.getElementById("login-form");
+  const registerForm = document.getElementById("register-form");
+  const linkGoRegister = document.getElementById("link-go-register");
+  const linkGoLogin = document.getElementById("link-go-login");
+  const authTitle = document.getElementById("auth-title");
+  const authSwitchText = document.getElementById("auth-switch-text");
+  const authLangSelect = document.getElementById("auth-lang");
 
+  // Idioma: usamos la misma clave que Nova (nova_lang)
+  if (authLangSelect) {
+    const savedLang = localStorage.getItem("nova_lang") || "en";
+    authLangSelect.value = savedLang;
+
+    authLangSelect.addEventListener("change", () => {
+      localStorage.setItem("nova_lang", authLangSelect.value);
+    });
+  }
+
+  // Cambiar entre LOGIN y REGISTER
+  if (linkGoRegister && linkGoLogin && loginForm && registerForm && authTitle && authSwitchText) {
+    linkGoRegister.addEventListener("click", () => {
+      loginForm.style.display = "none";
+      registerForm.style.display = "block";
+      authTitle.textContent = "Register";
+      authSwitchText.textContent = "Already have an account?";
+      linkGoRegister.style.display = "none";
+      linkGoLogin.style.display = "inline-block";
+    });
+
+    linkGoLogin.addEventListener("click", () => {
+      registerForm.style.display = "none";
+      loginForm.style.display = "block";
+      authTitle.textContent = "Log in";
+      authSwitchText.textContent = "Don’t have an account?";
+      linkGoLogin.style.display = "none";
+      linkGoRegister.style.display = "inline-block";
+    });
+  }
+
+  // LOGIN: solo guardamos el email y usamos el username ya guardado (si existe)
+  if (loginForm) {
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("login-email")?.value.trim() || "";
+      if (!email) {
+        alert("Please write your email.");
+        return;
+      }
+
+      // Si no hay username guardado, usamos NovaUser
+      const existingUser =
+        localStorage.getItem("cura_username") || "NovaUser";
+
+      localStorage.setItem("cura_email", email);
+      localStorage.setItem("cura_username", existingUser);
+
+      // Ir al chatbot
+      window.location.href = "nova.html";
+    });
+  }
+
+  // REGISTER: guardamos username + email y vamos al chatbot
+  if (registerForm) {
+    registerForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const username =
+        document.getElementById("reg-username")?.value.trim() || "NovaUser";
+      const email =
+        document.getElementById("reg-email")?.value.trim() || "";
+
+      if (!email) {
+        alert("Please write your email.");
+        return;
+      }
+
+      localStorage.setItem("cura_username", username);
+      localStorage.setItem("cura_email", email);
+
+      // Ir al chatbot
+      window.location.href = "nova.html";
+    });
+  }
+});
 
 // ================= IDIOMA ACTUAL Y TEXTOS =================
 
@@ -1421,4 +1507,5 @@ function handleConversation(userText) {
 
   createBotMessageBubble(t("newEval"));
   conversationStep = "start";
+
 }
