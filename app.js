@@ -620,76 +620,119 @@ if (btnAboutClose && modalAbout) {
   });
 }
 
-// ================= RECORDATORIOS
+// ===================== RECORDATORIOS POR USUARIO =====================
 
-const modalReminder = document.getElementById("modal-reminder-backdrop");
-const btnOpenReminder = document.getElementById("btn-open-reminder");
-const btnReminderCancel = document.getElementById("btn-reminder-cancel");
-const btnReminderSave = document.getElementById("btn-reminder-save");
-const remindersList = document.getElementById("reminders-list");
+// Obtener usuario activo
+function getActiveEmail() {
+  return localStorage.getItem("cura_email") || null;
+}
 
-const reminderTitleInput = document.getElementById("reminder-title");
-const reminderDateInput = document.getElementById("reminder-date");
-const reminderTimeInput = document.getElementById("reminder-time");
+// Cargar recordatorios del usuario
+function loadReminders() {
+  const email = getActiveEmail();
+  if (!email) return [];
 
-if (
-  btnOpenReminder &&
-  modalReminder &&
-  reminderTitleInput &&
-  reminderDateInput &&
-  reminderTimeInput &&
-  remindersList
-) {
-  btnOpenReminder.addEventListener("click", () => {
-    reminderTitleInput.value = "";
-    reminderDateInput.value = "";
-    reminderTimeInput.value = "";
-    modalReminder.classList.add("show");
-    reminderTitleInput.focus();
-  });
+  const raw = localStorage.getItem(`cura_reminders_${email}`);
+  if (!raw) return [];
 
-  function closeReminderModal() {
-    modalReminder.classList.remove("show");
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return [];
   }
+}
 
-  btnReminderCancel.addEventListener("click", closeReminderModal);
+// Guardar recordatorios del usuario
+function saveReminders(list) {
+  const email = getActiveEmail();
+  if (!email) return;
 
-  modalReminder.addEventListener("click", (e) => {
-    if (e.target === modalReminder) closeReminderModal();
+  localStorage.setItem(
+    `cura_reminders_${email}`,
+    JSON.stringify(list)
+  );
+}
+
+// Pintar recordatorios en pantalla
+function renderReminders() {
+  const container = document.getElementById("reminder-list");
+  if (!container) return;
+
+  const list = loadReminders();
+  container.innerHTML = "";
+
+  list.forEach((rem, index) => {
+    const div = document.createElement("div");
+    div.className = "reminder-card";
+
+    div.innerHTML = `
+      <div class="reminder-info">
+        <strong>${rem.title}</strong><br>
+        <span>${rem.date} — ${rem.time}</span>
+      </div>
+      <button class="reminder-delete" data-i="${index}">✕</button>
+    `;
+
+    container.appendChild(div);
   });
 
-  btnReminderSave.addEventListener("click", () => {
-    const title = reminderTitleInput.value.trim();
-    const date = reminderDateInput.value;
-    const time = reminderTimeInput.value;
+  // botón para borrar recordatorio
+  document.querySelectorAll(".reminder-delete").forEach((btn) => {
+    btn.onclick = () => {
+      const i = btn.dataset.i;
+      const list = loadReminders();
+      list.splice(i, 1);
+      saveReminders(list);
+      renderReminders();
+    };
+  });
+}
+
+// Manejo del botón "Add reminder"
+const reminderBtn = document.getElementById("open-reminder");
+const reminderModal = document.getElementById("reminder-modal");
+const reminderClose = document.getElementById("close-reminder");
+const reminderSave = document.getElementById("save-reminder");
+
+if (reminderBtn && reminderModal) {
+  reminderBtn.addEventListener("click", () => {
+    reminderModal.style.display = "flex";
+  });
+}
+
+if (reminderClose && reminderModal) {
+  reminderClose.addEventListener("click", () => {
+    reminderModal.style.display = "none";
+  });
+}
+
+if (reminderSave) {
+  reminderSave.addEventListener("click", () => {
+    const title = document.getElementById("reminder-title").value.trim();
+    const date = document.getElementById("reminder-date").value.trim();
+    const time = document.getElementById("reminder-time").value.trim();
 
     if (!title || !date || !time) {
-      alert("Por favor completa nombre, fecha y hora del recordatorio.");
+      alert("Please complete all fields");
       return;
     }
 
-    const empty = remindersList.querySelector(".reminder-empty");
-    if (empty) empty.remove();
+    const list = loadReminders();
+    list.push({ title, date, time });
+    saveReminders(list);
 
-    const item = document.createElement("div");
-    item.className = "reminder-item";
+    document.getElementById("reminder-title").value = "";
+    document.getElementById("reminder-date").value = "";
+    document.getElementById("reminder-time").value = "";
 
-    const titleEl = document.createElement("div");
-    titleEl.className = "reminder-title";
-    titleEl.textContent = title;
-
-    const metaEl = document.createElement("div");
-    metaEl.className = "reminder-meta";
-    metaEl.textContent = `${date} • ${time}`;
-
-    item.appendChild(titleEl);
-    item.appendChild(metaEl);
-
-    remindersList.appendChild(item);
-
-    closeReminderModal();
+    reminderModal.style.display = "none";
+    renderReminders();
   });
 }
+
+// Mostrar recordatorios al cargar la página
+document.addEventListener("DOMContentLoaded", renderReminders);
+
 
 // ================= RELOJ LOCAL
 
@@ -1546,3 +1589,4 @@ function handleConversation(userText) {
   createBotMessageBubble(t("newEval"));
   conversationStep = "start";
 }
+
